@@ -6,6 +6,7 @@ public class Camera3D {
     private ArrayList<double[]> vieToProjection = new ArrayList<double[]>();
     private ArrayList<double[]> worlToProjection = new ArrayList<double[]>();
 
+    // имена переменных пишутся в camelCase, именования осмысленные, полностью
     private double[] Ov; // начало ВСК
     private double[] T; // Вектор нормали объекта
     private double[] N; // Вектор нормали плоскости ВСК

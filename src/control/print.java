@@ -1,20 +1,13 @@
 package control;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.*;
-
 import camera.Camera3D;
 import math.Affine;
 import math.Model;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class print extends JPanel {
     private static final int PREF_W = 2000; // ширина
@@ -118,7 +111,7 @@ public class print extends JPanel {
             int x1 = x0;
             int y1 = y0 + 2 * DASH_WIDTH;
 
-            if ((x0 > L) && (x0 < (getWidth() - R)) && (x0 > 0))
+            if ((x0 > L) && (x0 < (getWidth() - R)))
                 g2.drawLine(x0, y0, x1, y1);
 
             x0 = POS_ZERO_X - (int) (i * Scale * cam.getD() / cam.getOv()[0]);
@@ -126,7 +119,7 @@ public class print extends JPanel {
             x1 = x0;
             y1 = y0 + 2 * DASH_WIDTH;
 
-            if ((x0 > L) && (x0 < (getWidth() - R)) && (x0 > 0))
+            if ((x0 > L) && (x0 < (getWidth() - R)))
                 g2.drawLine(x0, y0, x1, y1);
         }
 
@@ -137,7 +130,7 @@ public class print extends JPanel {
             int x1 = x0 + 2 * DASH_WIDTH;
             int y1 = y0;
 
-            if ((y0 > T) && (y0 < (getHeight() - B)) && (y0 > 0))
+            if ((y0 > T) && (y0 < (getHeight() - B)))
                 g2.drawLine(x0, y0, x1, y1);
 
             x0 = POS_ZERO_X - DASH_WIDTH;
@@ -145,11 +138,10 @@ public class print extends JPanel {
             x1 = x0 + 2 * DASH_WIDTH;
             y1 = y0;
 
-            if ((y0 > T) && (y0 < (getHeight() - B)) && (y0 > 0))
+            if ((y0 > T) && (y0 < (getHeight() - B)))
                 g2.drawLine(x0, y0, x1, y1);
         }
 
-        getAxisRatio();
         // Штриховка на оси Z
         for (int i = 0; i < COUNT_Z_POINTS * 4; i++) {
             int x0 = POS_ZERO_X + (int) (i * Scale * 0.625) - DASH_WIDTH;
@@ -157,7 +149,7 @@ public class print extends JPanel {
             int x1 = x0 + 2 * DASH_WIDTH;
             int y1 = y0 + 2 * DASH_WIDTH;
 
-            if ((y0 > T) && (y0 < (getHeight() - B)) && (y0 > 0) && (x0 > L) && (x0 < (getWidth() - R)) && (x0 > 0))
+            if ((y0 > T) && (y0 < (getHeight() - B)) && (x0 > L) && (x0 < (getWidth() - R)))
                 g2.drawLine(x0, y0, x1, y1);
 
             x0 = POS_ZERO_X - (int) (i * Scale * 0.625) - DASH_WIDTH;
@@ -165,7 +157,7 @@ public class print extends JPanel {
             x1 = x0 + 2 * DASH_WIDTH;
             y1 = y0 + 2 * DASH_WIDTH;
 
-            if ((y0 > T) && (y0 < (getHeight() - B)) && (y0 > 0) && (x0 > L) && (x0 < (getWidth() - R)) && (x0 > 0))
+            if ((y0 > T) && (y0 < (getHeight() - B)) && (x0 > L) && (x0 < (getWidth() - R)))
                 g2.drawLine(x0, y0, x1, y1);
         }
 
@@ -195,15 +187,12 @@ public class print extends JPanel {
     // Отрисовка точек
     public void printModelVertex(List<Point> graphPoints, Graphics g2) {
 
-        for (int i = 0; i < graphPoints.size(); i++) {
-            int x = graphPoints.get(i).x - GRAPH_POINT_WIDTH / 2;
-            int y = graphPoints.get(i).y - GRAPH_POINT_WIDTH / 2;
+        for (Point graphPoint : graphPoints) {
+            int x = graphPoint.x - GRAPH_POINT_WIDTH / 2;
+            int y = graphPoint.y - GRAPH_POINT_WIDTH / 2;
 
-            if ((x > L) && (x < (getWidth() - R)) && (y > T) && (y < (getHeight() - B))) {
-                int ovalW = GRAPH_POINT_WIDTH;
-                int ovalH = GRAPH_POINT_WIDTH;
-                g2.fillOval(x, y, ovalW, ovalH);
-            }
+            if ((x > L) && (x < (getWidth() - R)) && (y > T) && (y < (getHeight() - B)))
+                g2.fillOval(x, y, GRAPH_POINT_WIDTH, GRAPH_POINT_WIDTH);
         }
     }
 
@@ -221,20 +210,7 @@ public class print extends JPanel {
                 if ((x2 > L) && (x2 < (getWidth() - R)) && (y2 > T) && (y2 < (getHeight() - B)))
                     g2.drawLine(x1, y1, x2, y2);
             }
-
         }
-    }
-
-    public ArrayList<double[]> getAxisRatio() {
-        Model model = new Model(1, 0);
-        ArrayList<double[]> points = new ArrayList<double[]>();
-        double[] mas = { 0, 0, 1, 1 };
-        points.add(mas);
-        model.setCoordinatesList(points);
-        model.setProjectionCoordinates(cam);
-        ArrayList<double[]> result = model.getProjectionCoordinates();
-
-        return result;
     }
 
     public static void moveFigure(int x_coordinates, int y_coordinates, int z_coordinates) {
